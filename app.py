@@ -23,5 +23,22 @@ def home_page():
 
 @app.route("/add")
 def add_user():
-    
     return render_template("add_user.html")
+
+
+@app.route("/add-to-db", methods=["POST"])
+def add_user_to_db():
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    image_url = request.form["image_url"]
+    
+    if(image_url):
+        image_url = image_url
+    else:
+        image_url = None
+
+    user = User(first_name=first_name, last_name=last_name, image_url=image_url)
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect("/")
