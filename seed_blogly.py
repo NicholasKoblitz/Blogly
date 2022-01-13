@@ -1,4 +1,3 @@
-"""Seed file to create and populate blogly database"""
 
 from models import db, User
 from app import app
