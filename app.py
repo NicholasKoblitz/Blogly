@@ -19,3 +19,9 @@ def home_page():
 
     users = User.query.all()
     return render_template("home_page.html", users=users)
+
+
+@app.route("/add")
+def add_user():
+    
+    return render_template("add_user.html")
