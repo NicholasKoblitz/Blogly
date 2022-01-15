@@ -76,6 +76,8 @@ def edit_user(user_id):
 
 @app.route("/users/<int:user_id>/edit", methods=["POST"])
 def edit_db(user_id):
+    """Adds the updated user information to the database"""
+
 
     user = User.query.get(user_id)
 
@@ -96,3 +98,15 @@ def edit_db(user_id):
     db.session.commit()
 
     return redirect(f"/users/{user.id}")
+
+
+@app.route("/users/<int:user_id>/delete", methods=["POST"])
+def delete_user(user_id):
+    """Deletes the selscted user"""
+
+    user = User.query.get(user_id)
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return redirect("/users")
