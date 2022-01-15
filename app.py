@@ -16,6 +16,7 @@ connect_db(app)
 
 @app.route("/")
 def home_page():
+    """Brings to the home page"""
 
     users = User.query.all()
     return render_template("home_page.html", users=users)
@@ -23,15 +24,19 @@ def home_page():
 
 @app.route("/add")
 def add_user():
+    """Sends user to the Add New User form"""
+
     return render_template("add_user.html")
 
 
 @app.route("/add-to-db", methods=["POST"])
 def add_user_to_db():
+    """Addes new user to the database"""
+
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
     image_url = request.form["image_url"]
-    
+
     if(image_url):
         image_url = image_url
     else:
@@ -42,3 +47,45 @@ def add_user_to_db():
     db.session.commit()
 
     return redirect("/")
+
+
+@app.route("/user-details/<int:user_id>")
+def show_user_details(user_id):
+    """Brings user to the User Details page"""
+
+    user = User.query.get(user_id)
+
+    return render_template("details.html", user=user)
+
+
+@app.route("/edit-user/<int:user_id>")
+def edit_user(user_id):
+    """Brings user to the User edit page"""
+
+    user = User.query.get(user_id)
+
+    return render_template("edit.html", user=user)
+
+
+@app.route("/edit-db/<int:user_id>", methods=["POST"])
+def edit_db(user_id):
+
+    user = User.query.get(user_id)
+
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    image_url = request.form["image_url"]
+
+    if(image_url):
+        image_url = image_url
+    else:
+        image_url = None
+
+    user.first_name = first_name
+    user.last_name = last_name
+    user.image_url = image_url
+
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect(f"/user-details/{user.id}")
