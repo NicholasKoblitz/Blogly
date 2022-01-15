@@ -18,18 +18,25 @@ connect_db(app)
 def home_page():
     """Brings to the home page"""
 
+    
+    return redirect("/users")
+
+
+@app.route("/users")
+def show_users():
+
     users = User.query.all()
     return render_template("home_page.html", users=users)
 
 
-@app.route("/add")
+@app.route("/users/new")
 def add_user():
     """Sends user to the Add New User form"""
 
     return render_template("add_user.html")
 
 
-@app.route("/add-to-db", methods=["POST"])
+@app.route("/users/new", methods=["POST"])
 def add_user_to_db():
     """Addes new user to the database"""
 
@@ -49,7 +56,7 @@ def add_user_to_db():
     return redirect("/")
 
 
-@app.route("/user-details/<int:user_id>")
+@app.route("/users/<int:user_id>")
 def show_user_details(user_id):
     """Brings user to the User Details page"""
 
@@ -58,7 +65,7 @@ def show_user_details(user_id):
     return render_template("details.html", user=user)
 
 
-@app.route("/edit-user/<int:user_id>")
+@app.route("/users/<int:user_id>/edit")
 def edit_user(user_id):
     """Brings user to the User edit page"""
 
@@ -67,7 +74,7 @@ def edit_user(user_id):
     return render_template("edit.html", user=user)
 
 
-@app.route("/edit-db/<int:user_id>", methods=["POST"])
+@app.route("/users/<int:user_id>/edit", methods=["POST"])
 def edit_db(user_id):
 
     user = User.query.get(user_id)
@@ -88,4 +95,4 @@ def edit_db(user_id):
     db.session.add(user)
     db.session.commit()
 
-    return redirect(f"/user-details/{user.id}")
+    return redirect(f"/users/{user.id}")
