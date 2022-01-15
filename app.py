@@ -26,7 +26,7 @@ def home_page():
 def show_users():
 
     users = User.query.all()
-    return render_template("home_page.html", users=users)
+    return render_template("users.html", users=users)
 
 
 @app.route("/users/new")
