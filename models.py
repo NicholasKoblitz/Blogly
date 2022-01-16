@@ -21,6 +21,8 @@ class User(db.Model):
     last_name = db.Column(db.String(20), nullable=False)
     image_url = db.Column(db.String, nullable=True)
     
+    users = db.relationship('Post', backref='posts')
+
 
     def get_full_name(self):
         """Users full name"""
