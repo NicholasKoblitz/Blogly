@@ -1,6 +1,6 @@
 from unittest import TestCase
 from app import app
-from models import User, db
+from models import User, Post, db
 
 app.config["SQLALCHEMY_DATABASE_URI"] ='postgresql:///blogly_test'
 app.config["SQLALCHEMY_ECHO"] = False
@@ -16,14 +16,21 @@ class UsersTestCase(TestCase):
 
     def setUp(self):
 
-        User.query.delete()
+        # User.query.delete()
+        # Post.query.delete()
 
         user = User(first_name="John", last_name="Doe", image_url="https://t4.ftcdn.net/jpg/02/14/74/61/360_F_214746128_31JkeaP6rU0NzzzdFC4khGkmqc8noe6h.jpg")
+
+        post = Post(title="TEST POST", content="This is a test", user_id=user.id)
 
         db.session.add(user)
         db.session.commit()
 
+        db.session.add(post)
+        db.session.commit()
+
         self.user_id = user.id
+        self.post_id = post.id
 
     def tearDown(self):
         db.session.rollback()
@@ -65,6 +72,7 @@ class UsersTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("John Doe", html)
+            # self.assertIn("TEST POST", html)
 
     def test_user_edit(self):
         with app.test_client() as client:
@@ -91,3 +99,52 @@ class UsersTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 302)
             self.assertNotIn("John Doe", html)
+
+    def test_get_add_post(self):
+        with app.test_client() as client:
+            resp = client.get(f"/users/{self.user_id}/posts/new")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Add Post for John Doe", html)
+
+    def test_post_user_posts(self):
+        with app.test_client() as client:
+            data = {f"title":"TEST 2", "content": "This is test 2", "user_id": "{self.user_id}"}
+            resp = client.post(f"/users/{self.user_id}/posts/new", data=data, follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+
+    def test_post_details(self):
+        with app.test_client() as client:
+            resp = client.get(f"/posts/{self.post_id}")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("TEST POST", html)
+
+    def test_get_post_edit(self):
+        with app.test_client() as client:
+            resp = client.get(f"/posts/{self.post_id}/edit")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Edit Post", html)
+
+    def test_post_edit_post(self):
+        with app.test_client() as client:
+            data = {"title":"Updated Post", "content": "This is a test"}
+            resp = client.post(f"/posts/{self.post_id}/edit", data=data, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("Updated Post", html)
+
+    def test_delete_post(self):
+        with app.test_client() as client:
+            data= {f"title":"TEST POST", "content": "This is a test"}
+            resp = client.post(f"/posts/{self.post_id}/delete", data=data, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            # self.assertEqual(resp.status_code, 200)
+            self.assertNotIn("TEST POST", html)

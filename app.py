@@ -21,7 +21,7 @@ def home_page():
     
     return redirect("/users")
 
-
+# User Routes
 @app.route("/users")
 def show_users():
 
@@ -113,7 +113,7 @@ def delete_user(user_id):
 
     return redirect("/users")
 
-
+# Post routes
 @app.route("/users/<int:user_id>/posts/new")
 def get_post_page(user_id):
     """Loads the create new post page"""
