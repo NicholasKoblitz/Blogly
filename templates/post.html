@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{post.title}}{% endblock %}
+
+
+{% block content %}
+
+    <h1>{{post.title}}</h1>
+
+    <p>{{post.content}}</p>
+
+    {% if post.users.id == post.user_id %}
+
+    <blockquote>By {{post.users.full_name}}</blockquote>
+
+    {% endif %}
+
+    <form action="/users/{{post.users.id}}">
+        <button>Cancel</button>
+    </form>
+    <form action="/posts/{{post.id}}/edit">
+        <button>Edit</button>
+    </form>
+    <form action="/posts/{{post.id}}/delete" method="post">
+        <button>Delete</button>
+    </form>
+
+{% endblock %}

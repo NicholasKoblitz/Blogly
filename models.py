@@ -21,7 +21,7 @@ class User(db.Model):
     last_name = db.Column(db.String(20), nullable=False)
     image_url = db.Column(db.String, nullable=True)
     
-    users = db.relationship('Post', backref='posts')
+    posts = db.relationship('Post')
 
 
     def get_full_name(self):
@@ -44,3 +44,5 @@ class Post(db.Model):
     content = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    users = db.relationship('User')

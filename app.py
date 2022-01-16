@@ -104,7 +104,7 @@ def edit_db(user_id):
 
 @app.route("/users/<int:user_id>/delete", methods=["POST"])
 def delete_user(user_id):
-    """Deletes the selscted user"""
+    """Deletes the selected user"""
 
     user = User.query.get(user_id)
 
@@ -137,3 +137,51 @@ def add_post(user_id):
     db.session.commit()
 
     return redirect(f"/users/{user.id}")
+
+
+@app.route("/posts/<int:post_id>")
+def get_post(post_id):
+    """Brings up the post detail page"""
+
+    post = Post.query.get(post_id)
+
+    return render_template("post.html", post=post)
+
+
+@app.route("/posts/<int:post_id>/edit")
+def get_edit_post(post_id):
+    """Gets edit post form"""
+
+    post = Post.query.get(post_id)
+
+    return render_template("edit_post.html", post=post)
+
+@app.route("/posts/<int:post_id>/edit", methods=["POST"])
+def update_post(post_id):
+    """Updates user post"""
+
+    post = Post.query.get(post_id)
+
+    title = request.form["title"]
+    content = request.form["content"]
+
+    post.title = title
+    post.content = content
+
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(f"/posts/{post_id}")
+
+
+@app.route("/posts/<int:post_id>/delete", methods=["POST"])
+def delete_post(post_id):
+    """Deletes user post"""
+
+    post = Post.query.get(post_id)
+    user_id = post.user_id
+
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
