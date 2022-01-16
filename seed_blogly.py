@@ -26,8 +26,8 @@ db.session.commit()
 Post.query.delete()
 
 # Add posts
-post_1 = Post(title="Seed 1", content="This is a seed post!")
-post_2 = Post(title="Seed 2", content="Another seed post!!")
+post_1 = Post(title="Seed 1", content="This is a seed post!", user_id=1)
+post_2 = Post(title="Seed 2", content="Another seed post!!", user_id=2)
 
 # Adds posts to session
 db.session.add_all([post_1, post_2])
