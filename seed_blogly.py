@@ -1,7 +1,7 @@
 
-from models import db, User
+from models import db, User, Post
 from app import app
-
+from datetime import datetime
 
 # Drops the database if exists and than recreates it
 db.drop_all()
@@ -20,4 +20,17 @@ db.session.add(john_doe)
 db.session.add(jane_smith)
 
 # Commits the session to the db
+db.session.commit()
+
+# Deletes data in posts table
+Post.query.delete()
+
+# Add posts
+post_1 = Post(title="Seed 1", content="This is a seed post!")
+post_2 = Post(title="Seed 2", content="Another seed post!!")
+
+# Adds posts to session
+db.session.add_all([post_1, post_2])
+
+# Commits posts to db
 db.session.commit()
