@@ -14,6 +14,9 @@ def connect_db(app):
 class User(db.Model):
     """User Table"""
 
+    def __repr__(self):
+        return f"User: {self.first_name} {self.last_name}"
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -36,6 +39,9 @@ class User(db.Model):
 class Post(db.Model):
     """Post Table"""
 
+    def __repr__(self):
+        return f"Post: {self.title}"
+
     __tablename__ = "posts"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -44,4 +50,6 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    users = db.relationship('User')
+    users = db.relationship('User', backref = "posts")
+
+    
