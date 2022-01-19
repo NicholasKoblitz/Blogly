@@ -40,7 +40,7 @@ class Post(db.Model):
     """Post Table"""
 
     def __repr__(self):
-        return f"Post: {self.title}"
+        return f"Post: {self.title}, {self.created_at}"
 
     __tablename__ = "posts"
 

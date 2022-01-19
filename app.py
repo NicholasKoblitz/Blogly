@@ -3,6 +3,7 @@
 from flask import Flask, redirect, render_template, request
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Post
+from datetime import datetime
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "001HHUUDSKFUhhqyw56"
@@ -18,8 +19,15 @@ connect_db(app)
 def home_page():
     """Brings to the home page"""
 
+    posts_by_dates = Post.query.filter(Post.created_at <= datetime.now()).limit(5)
+    # for post in posts_by_dates:
+    #     date_24 = post.created_at.strptime()
     
-    return redirect("/users")
+
+
+    return render_template("home_page.html", posts=posts_by_dates)
+
+    # return redirect("/users")
 
 # User Routes
 @app.route("/users")

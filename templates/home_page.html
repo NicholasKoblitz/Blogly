@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+
+{% block content %}
+
+<ul>
+    {% for post in posts%}
+        <li>
+            <a href="/posts/{{post.id}}">{{post.title}}</a>
+            <p>{{post.content}}</p>
+            By <a href="/users/{{post.user_id}}">{{post.users.get_full_name()}}</a> on {{post.created_at.month}}-{{post.created_at.day}}-{{post.created_at.year}} {{post.created_at.strftime('%I: %M')}} 
+        </li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}
