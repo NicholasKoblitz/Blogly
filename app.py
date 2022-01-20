@@ -1,4 +1,5 @@
 """Blogly application."""
+from crypt import methods
 from operator import methodcaller
 from flask import Flask, redirect, render_template, request, flash
 from flask_debugtoolbar import DebugToolbarExtension
@@ -235,6 +236,7 @@ def update_tags_table():
 
 @app.route("/tags/<int:tag_id>/edit")
 def get_edit_tag(tag_id):
+    """Shows tag edit page"""
 
     tag = Tag.query.get(tag_id)
 
@@ -243,6 +245,7 @@ def get_edit_tag(tag_id):
 
 @app.route("/tags/<int:tag_id>/edit", methods=["POST"])
 def update_tag(tag_id):
+    """Updates database with new tag name"""
 
     tag = Tag.query.get(tag_id)
 
@@ -255,3 +258,15 @@ def update_tag(tag_id):
 
     return redirect(f"/tags/{tag.id}")
     
+
+@app.route("/tags/<int:tag_id>/delete", methods=["POST"])
+def delete_tag(tag_id):
+    """Deletes tag from database"""
+
+    tag = Tag.query.get(tag_id)
+    tag_id = tag.id
+
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect(f"/tags")
