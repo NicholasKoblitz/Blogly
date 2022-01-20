@@ -205,6 +205,7 @@ def get_tags():
 
 @app.route("/tags/<int:tag_id>")
 def get_tag_details(tag_id):
+    """Show tag details"""
 
     tag = Tag.query.get(tag_id)
 
@@ -213,12 +214,14 @@ def get_tag_details(tag_id):
 
 @app.route("/tags/new")
 def get_add_tags():
+    """Shows the add tags form"""
 
     return render_template("add_tags.html")
 
 
 @app.route("/tags/new", methods=["POST"])
 def update_tags_table():
+    """Adds new tag to database"""
 
     tag_name = request.form["tag-name"]
 
@@ -228,3 +231,27 @@ def update_tags_table():
     db.session.commit()
 
     return redirect("/tags")
+
+
+@app.route("/tags/<int:tag_id>/edit")
+def get_edit_tag(tag_id):
+
+    tag = Tag.query.get(tag_id)
+
+    return render_template("edit_tag.html", tag=tag)
+
+
+@app.route("/tags/<int:tag_id>/edit", methods=["POST"])
+def update_tag(tag_id):
+
+    tag = Tag.query.get(tag_id)
+
+    tag_name = request.form["tag-name"]
+
+    tag.name = tag_name
+
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect(f"/tags/{tag.id}")
+    
