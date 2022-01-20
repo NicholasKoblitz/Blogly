@@ -1,6 +1,6 @@
 
 from distutils.command.build_scripts import first_line_re
-from models import db, User, Post
+from models import db, User, Post, Tag, PostTag
 from app import app
 from datetime import datetime
 
@@ -37,4 +37,33 @@ post_5 = Post(title="Workers Needed!", content="If you want to work call me", us
 db.session.add_all([post_1, post_2, post_3, post_4, post_5])
 
 # Commits posts to db
+db.session.commit()
+
+
+# Deletes data in table if any exists
+Tag.query.delete()
+
+# Adds Tags to the database
+funny = Tag(name='Funny')
+cool = Tag(name='Cool')
+sad = Tag(name="Sad")
+cat = Tag(name="Cat")
+
+# Adds data to db session
+db.session.add_all([funny, cool, sad, cat])
+
+# Commits data to db
+db.session.commit()
+
+# Deletes any data in table
+PostTag.query.delete()
+
+# Creates tags
+funny_tag = PostTag(post_id=1, tag_id=1)
+cat_tag = PostTag(post_id=3, tag_id=4)
+
+# Adds tags to database
+db.session.add_all([funny_tag, cat_tag])
+
+
 db.session.commit()

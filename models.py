@@ -1,5 +1,4 @@
 """Models for Blogly."""
-from email.policy import default
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -24,6 +23,8 @@ class User(db.Model):
     last_name = db.Column(db.String(20), nullable=False)
     image_url = db.Column(db.String, nullable=True)
     
+    # tag = db.relationship("Tag", secondary='posttag', backref='users')
+    # post_tag = db.relationship("PostTag", backref='users')
 
 
     def get_full_name(self):
@@ -50,6 +51,32 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    users = db.relationship('User', backref = "posts")
+    users = db.relationship('User', cascade = 'all, delete', backref = "posts")
+    tag = db.relationship("Tag", secondary='post_tags', backref='posts')
+    post_tag = db.relationship("PostTag", cascade='all, delete', backref='posts')
 
+
+
+class Tag(db.Model):
+    """Tags Table"""
+
+    def __repr__(self):
+        return f"{self.name}"
+
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    name = db.Column(db.Text, unique = True)
     
+    post_tag = db.relationship('PostTag', cascade = 'all, delete', backref='tags')
+
+
+class PostTag(db.Model):
+    """Post Tags Table"""
+
+    __tablename__ = "post_tags"
+
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key = True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key = True)
+
+
