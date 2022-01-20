@@ -10,10 +10,12 @@
         <li>
             <a href="/posts/{{post.id}}">{{post.title}}</a>
             <p>{{post.content}}</p>
-            By <a href="/users/{{post.user_id}}">{{post.users.get_full_name()}}</a> on {{post.created_at.month}}-{{post.created_at.day}}-{{post.created_at.year}} {{post.created_at.strftime('%I: %M')}} 
+            By <a href="/users/{{post.user_id}}">{{post.users.full_name}}</a> on {{post.created_at.month}}-{{post.created_at.day}}-{{post.created_at.year}} {{post.created_at.strftime('%I: %M')}} 
         </li>
     {% endfor %}
 </ul>
-
+<form action="/users">
+    <button>Go to Users</button>
+</form>
 
 {% endblock %}
