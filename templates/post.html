@@ -11,12 +11,20 @@
 
     {% if post.users.id == post.user_id %}
 
-    <blockquote>By {{post.users.full_name}}</blockquote>
+    <blockquote>By {{post.users.full_name}} on  {{post.created_at.month}}-{{post.created_at.day}}-{{post.created_at.year}} {{post.created_at.strftime('%I: %M')}}</blockquote>
 
     {% endif %}
 
-    <form action="/users/{{post.users.id}}">
-        <button>Cancel</button>
+    <ul>
+        {% for tag in tags %}
+
+            <li>{{tag}}</li>
+
+        {% endfor %}
+    </ul>
+
+    <form action="/">
+        <button>Back</button>
     </form>
     <form action="/posts/{{post.id}}/edit">
         <button>Edit</button>

@@ -73,6 +73,7 @@ def show_user_details(user_id):
     user = User.query.get(user_id)
     posts = Post.query.filter_by(user_id = user_id).all()
 
+
     return render_template("details.html", user=user, posts=posts)
 
 
@@ -153,8 +154,15 @@ def get_post(post_id):
     """Brings up the post detail page"""
 
     post = Post.query.get(post_id)
+    tags = PostTag.query.filter(PostTag.post_id == post_id).all()
+    tag_names = []
 
-    return render_template("post.html", post=post)
+    for tag in tags:
+        tag_names.append(tag.tags.name)
+    
+
+    
+    return render_template("post.html", post=post, tags=tag_names)
 
 
 @app.route("/posts/<int:post_id>/edit")
