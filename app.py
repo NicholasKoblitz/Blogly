@@ -1,7 +1,8 @@
 """Blogly application."""
+from operator import methodcaller
 from flask import Flask, redirect, render_template, request, flash
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 from datetime import datetime
 
 app = Flask(__name__)
@@ -192,3 +193,38 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect(f"/users/{user_id}")
+
+@app.route("/tags")
+def get_tags():
+    """Shows the tags page"""
+
+    tags = Tag.query.all()
+
+    return render_template("tags.html", tags=tags)
+
+
+@app.route("/tags/<int:tag_id>")
+def get_tag_details(tag_id):
+
+    tag = Tag.query.get(tag_id)
+
+    return render_template("tag_details.html", tag=tag)
+
+
+@app.route("/tags/new")
+def get_add_tags():
+
+    return render_template("add_tags.html")
+
+
+@app.route("/tags/new", methods=["POST"])
+def update_tags_table():
+
+    tag_name = request.form["tag-name"]
+
+    tag = Tag(name=tag_name)
+    
+    db.session.add(tag)
+    db.session.commit()
+
+    return redirect("/tags")
