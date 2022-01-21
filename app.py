@@ -129,22 +129,33 @@ def get_post_page(user_id):
     """Loads the create new post page"""
 
     user = User.query.get(user_id)
+    tags = Tag.query.all()
 
-    return render_template("add_post.html", user=user)
+    return render_template("add_post.html", user=user, tags=tags)
 
 @app.route("/users/<int:user_id>/posts/new", methods=["POST"])
 def add_post(user_id):
     """Adds user post to database"""
 
     user = User.query.get(user_id)
+
     
     title = request.form["title"]
     content = request.form["content"]
-
+    tags = request.form.getlist("tag_names")
+    
     post = Post(title=title, content=content, user_id=user_id)
 
     db.session.add(post)
     db.session.commit()
+
+    for tag in tags:
+        add_tag = Tag.query.filter(Tag.name == tag).limit(1)
+        post_tag = PostTag(post_id=post.id, tag_id=add_tag[0].id)
+        
+        db.session.add(post_tag)
+        db.session.commit()
+
 
     return redirect(f"/users/{user.id}")
 

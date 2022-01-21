@@ -10,6 +10,12 @@
 <form action="/users/{{user.id}}/posts/new" method="post">
     <input type="text" name="title">
     <textarea cols="20" rows="10" name="content"></textarea>
+
+    {% for tag in tags %}
+
+    <input type="checkbox" name="tag_names" value="{{tag.name}}">{{tag.name}}
+
+    {% endfor %}
         <button>Add</button>
 </form>
 <form action="/users/{{user.id}}">
