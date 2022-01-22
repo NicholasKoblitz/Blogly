@@ -22,9 +22,6 @@ class User(db.Model):
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     image_url = db.Column(db.String, nullable=True)
-    
-    # tag = db.relationship("Tag", secondary='posttag', backref='users')
-    # post_tag = db.relationship("PostTag", backref='users')
 
 
     def get_full_name(self):
