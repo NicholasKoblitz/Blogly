@@ -10,6 +10,16 @@
 <form action="/posts/{{post.id}}/edit" method="post">
     <input type="text" name="title" value="{{post.title}}">
     <textarea cols="20" rows="10" name="content">{{post.content}}</textarea>
+
+    {% for tag in tags %}
+
+        {% if {{tag.id}} == {{post.post_tag.tag_id}} %}
+            <input type="checkbox" name="tag_names" value="{{tag.name}}" checked>{{tag.name}}
+        {% else %}
+            <input type="checkbox" name="tag_names" value="{{tag.name}}">{{tag.name}}
+        {% endif %}
+    {% endfor %}
+
     <button>Edit</button>
 </form>
 <form action="/posts/{{post.id}}">

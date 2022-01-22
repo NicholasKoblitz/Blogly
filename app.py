@@ -16,21 +16,21 @@ debug = DebugToolbarExtension(app)
 
 connect_db(app)
 
+
 @app.route("/")
 def home_page():
     """Brings to the home page"""
 
-    posts_by_dates = Post.query.filter(Post.created_at <= datetime.now()).limit(5)
-    # for post in posts_by_dates:
-    #     date_24 = post.created_at.strptime()
-    
+    posts_by_dates = Post.query.filter(
+        Post.created_at <= datetime.now()).limit(5)
 
+    tags = Tag.query.all()
 
-    return render_template("home_page.html", posts=posts_by_dates)
-
-    # return redirect("/users")
+    return render_template("home_page.html", posts=posts_by_dates, tags=tags)
 
 # User Routes
+
+
 @app.route("/users")
 def show_users():
 
@@ -59,7 +59,8 @@ def add_user_to_db():
     else:
         image_url = None
 
-    user = User(first_name=first_name, last_name=last_name, image_url=image_url)
+    user = User(first_name=first_name,
+                last_name=last_name, image_url=image_url)
     db.session.add(user)
     db.session.commit()
 
@@ -71,8 +72,7 @@ def show_user_details(user_id):
     """Brings user to the User Details page"""
 
     user = User.query.get(user_id)
-    posts = Post.query.filter_by(user_id = user_id).all()
-
+    posts = Post.query.filter_by(user_id=user_id).all()
 
     return render_template("details.html", user=user, posts=posts)
 
@@ -89,7 +89,6 @@ def edit_user(user_id):
 @app.route("/users/<int:user_id>/edit", methods=["POST"])
 def edit_db(user_id):
     """Adds the updated user information to the database"""
-
 
     user = User.query.get(user_id)
 
@@ -124,6 +123,8 @@ def delete_user(user_id):
     return redirect("/users")
 
 # Post routes
+
+
 @app.route("/users/<int:user_id>/posts/new")
 def get_post_page(user_id):
     """Loads the create new post page"""
@@ -133,17 +134,17 @@ def get_post_page(user_id):
 
     return render_template("add_post.html", user=user, tags=tags)
 
+
 @app.route("/users/<int:user_id>/posts/new", methods=["POST"])
 def add_post(user_id):
     """Adds user post to database"""
 
     user = User.query.get(user_id)
 
-    
     title = request.form["title"]
     content = request.form["content"]
     tags = request.form.getlist("tag_names")
-    
+
     post = Post(title=title, content=content, user_id=user_id)
 
     db.session.add(post)
@@ -152,10 +153,9 @@ def add_post(user_id):
     for tag in tags:
         add_tag = Tag.query.filter(Tag.name == tag).limit(1)
         post_tag = PostTag(post_id=post.id, tag_id=add_tag[0].id)
-        
+
         db.session.add(post_tag)
         db.session.commit()
-
 
     return redirect(f"/users/{user.id}")
 
@@ -170,9 +170,7 @@ def get_post(post_id):
 
     for tag in tags:
         tag_names.append(tag.tags.name)
-    
 
-    
     return render_template("post.html", post=post, tags=tag_names)
 
 
@@ -181,8 +179,10 @@ def get_edit_post(post_id):
     """Gets edit post form"""
 
     post = Post.query.get(post_id)
+    tags = Tag.query.all()
 
-    return render_template("edit_post.html", post=post)
+    return render_template("edit_post.html", post=post, tags=tags)
+
 
 @app.route("/posts/<int:post_id>/edit", methods=["POST"])
 def update_post(post_id):
@@ -213,6 +213,7 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect(f"/users/{user_id}")
+
 
 @app.route("/tags")
 def get_tags():
@@ -246,7 +247,7 @@ def update_tags_table():
     tag_name = request.form["tag-name"]
 
     tag = Tag(name=tag_name)
-    
+
     db.session.add(tag)
     db.session.commit()
 
@@ -276,7 +277,7 @@ def update_tag(tag_id):
     db.session.commit()
 
     return redirect(f"/tags/{tag.id}")
-    
+
 
 @app.route("/tags/<int:tag_id>/delete", methods=["POST"])
 def delete_tag(tag_id):
