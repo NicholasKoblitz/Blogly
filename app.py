@@ -1,7 +1,7 @@
 """Blogly application."""
 from crypt import methods
 from operator import methodcaller
-from flask import Flask, redirect, render_template, request, flash
+from flask import Flask, redirect, render_template, request
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Post, Tag, PostTag
 from datetime import datetime
@@ -24,7 +24,7 @@ def home_page():
     posts_by_dates = Post.query.filter(
         Post.created_at <= datetime.now()).limit(5)
 
-    tags = Tag.query.all()
+    tags = PostTag.query.all()
 
     return render_template("home_page.html", posts=posts_by_dates, tags=tags)
 

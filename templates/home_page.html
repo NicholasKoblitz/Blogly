@@ -6,24 +6,25 @@
 {% block content %}
 
 <ul>
-    {% for post in posts%}
+    {% for post in posts %}
         <li>
             <a href="/posts/{{post.id}}">{{post.title}}</a>
             <p>{{post.content}}</p>
             By <a href="/users/{{post.user_id}}">{{post.users.full_name}}</a> on {{post.created_at.month}}-{{post.created_at.day}}-{{post.created_at.year}} {{post.created_at.strftime('%I: %M')}} 
-
-            Tags: 
-            {% for tag in tags %}
-
-                {% if {{tag.post_tag.post_id}} == {{post.id}} %}
-                    <li>{{tag.name}}</li>
-                {% endif %}
-
-            {% endfor %}
-
-
         </li>
+        
+        <ul>
+            {% for tag in tags %}
+                {% if tag.post_id == post.id %}
+                    <li>{{tag.tags.name}}</li>
+                {% endif %}
+            {% endfor %}
+            
+        </ul>
+
     {% endfor %}
+
+    
 </ul>
 <form action="/users">
     <button>Go to Users</button>
