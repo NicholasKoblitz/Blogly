@@ -4,11 +4,13 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+
 def connect_db(app):
     """Connects to the database"""\
-    
+
     db.app = app
     db.init_app(app)
+
 
 class User(db.Model):
     """User Table"""
@@ -22,7 +24,6 @@ class User(db.Model):
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     image_url = db.Column(db.String, nullable=True)
-
 
     def get_full_name(self):
         """Users full name"""
@@ -48,10 +49,10 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    users = db.relationship('User', backref = "posts")
+    users = db.relationship('User', backref="posts")
     tag = db.relationship("Tag", secondary='post_tags', backref='posts')
-    post_tag = db.relationship("PostTag", cascade='all, delete', backref='posts')
-
+    post_tag = db.relationship(
+        "PostTag", cascade='all, delete', backref='posts')
 
 
 class Tag(db.Model):
@@ -62,10 +63,11 @@ class Tag(db.Model):
 
     __tablename__ = "tags"
 
-    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    name = db.Column(db.Text, unique = True)
-    
-    post_tag = db.relationship('PostTag', cascade = 'all, delete', backref='tags')
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, unique=True)
+
+    post_tag = db.relationship(
+        'PostTag', cascade='all, delete', backref='tags')
 
 
 class PostTag(db.Model):
@@ -73,7 +75,6 @@ class PostTag(db.Model):
 
     __tablename__ = "post_tags"
 
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key = True)
-    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key = True)
-
-
+    post_id = db.Column(db.Integer, db.ForeignKey(
+        'posts.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)

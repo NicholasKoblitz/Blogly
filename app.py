@@ -28,9 +28,8 @@ def home_page():
 
     return render_template("home_page.html", posts=posts_by_dates, tags=tags)
 
+
 # User Routes
-
-
 @app.route("/users")
 def show_users():
 
@@ -122,9 +121,8 @@ def delete_user(user_id):
 
     return redirect("/users")
 
+
 # Post routes
-
-
 @app.route("/users/<int:user_id>/posts/new")
 def get_post_page(user_id):
     """Loads the create new post page"""
@@ -215,6 +213,7 @@ def delete_post(post_id):
     return redirect(f"/users/{user_id}")
 
 
+# Tag Routes
 @app.route("/tags")
 def get_tags():
     """Shows the tags page"""
